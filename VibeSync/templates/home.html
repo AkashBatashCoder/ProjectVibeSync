@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <div class="hero-header">
+    <div>
+      <h1>{% block title %}ProjectVibeSync{% endblock %}</h1>
+      <p class="hero-subtitle">A clean space to share thoughts, ideas, and updates with your community.</p>
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}
+<section class="landing-hero">
+  <div class="landing-card landing-main">
+    <span class="badge">Modern Social Platform</span>
+    <h2>Share your vibe. Stay in sync.</h2>
+    <p>
+      ProjectVibeSync is a simple and elegant social web app where users can post updates,
+      read community posts, and manage their own content in a focused environment.
+    </p>
+
+    <div class="hero-actions">
+      <a class="btn-primary" href="{{ url_for('auth.login') }}">Log In</a>
+      <a class="btn-secondary" href="{{ url_for('auth.register') }}">Create Account</a>
+    </div>
+  </div>
+
+  <div class="landing-grid">
+    <div class="landing-card feature-card">
+      <h3>Private Feed Access</h3>
+      <p>Only logged-in users can explore the community feed and see what others are posting.</p>
+    </div>
+
+    <div class="landing-card feature-card">
+      <h3>Create & Manage Posts</h3>
+      <p>Write, edit, and delete your own posts with a simple and distraction-free workflow.</p>
+    </div>
+
+    <div class="landing-card feature-card">
+      <h3>Clean User Experience</h3>
+      <p>A minimal Flask-powered interface with a modern layout and focused social interaction.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

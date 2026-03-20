@@ -1,6 +1,7 @@
 import os 
 
-from flask import Flask, render_template
+from flask import Flask, app, render_template
+from flask import g, redirect, url_for
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -39,8 +40,12 @@ def create_app(test_config=None):
     from . import blog
     app.register_blueprint(blog.bp)
 
-    app.add_url_rule('/', endpoint='index')
-
+    #app.add_url_rule('/', endpoint='index')
+    @app.route('/')
+    def home():
+        if g.get('user'):
+            return redirect(url_for('blog.index'))
+        return render_template('home.html')
 
     @app.errorhandler(404)
     def not_found(e):

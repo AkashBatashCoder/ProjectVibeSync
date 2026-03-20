@@ -1,0 +1,87 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual environments
+env/
+venv/
+.venv/
+ENV/
+
+# Instance folder / local database
+instance/
+
+# Flask environment files
+.env
+.flaskenv
+
+# Distribution / packaging
+.Python
+build/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Test / coverage / cache
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE / editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# SQLite files
+*.sqlite
+*.sqlite3
+
+# Local notes or temp files
+*.log
+tmp/
+temp/
+
+# Extra 
+# Ignore .pyc files globally
+*.pyc
+
+# Ignore all __pycache__ directories
+__pycache__/
+
+# Specifically ignore .pyc files in the VibeSync/__pycache__/ directory
+VibeSync/__pycache__/*.pyc

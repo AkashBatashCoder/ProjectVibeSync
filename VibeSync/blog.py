@@ -8,7 +8,8 @@ from VibeSync.db import get_db
 bp = Blueprint('blog', __name__)
 
 
-@bp.route('/')
+@bp.route('/feed')
+@login_required
 def index():
     db = get_db()
     posts = db.execute(

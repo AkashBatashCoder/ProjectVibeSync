@@ -2,6 +2,8 @@ import os
 
 from flask import Flask, app, render_template
 from flask import g, redirect, url_for
+from flask_wtf.csrf import CSRFProtect
+
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -19,6 +21,11 @@ def create_app(test_config=None):
     os.makedirs(app.instance_path, exist_ok=True)
     
     
+
+    # Initialize CSRF protection
+    csrf = CSRFProtect(app)
+    csrf.init_app(app)
+
 
     # @app.route('/')
     # def home():

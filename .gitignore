@@ -86,3 +86,5 @@ __pycache__/
 # Specifically ignore .pyc files in the VibeSync/__pycache__/ directory
 VibeSync/__pycache__/*.pyc
 VibeSync/__pycache__/__init__.cpython-314.pyc
+VibeSync/__pycache__/__init__.cpython-314.pyc
+/VibeSync/__pycache__

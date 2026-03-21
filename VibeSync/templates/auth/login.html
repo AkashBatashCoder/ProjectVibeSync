@@ -6,10 +6,11 @@
 
 {% block content %}
     <form method="post">
-        <label for="username">Username</label>
-        <input name="username" id="username" required>
-        <label for="password">Password</label>
-        <input name="password" id="password" type="password" required>
-        <button type="submit">Log In</button>
+        {{ form.hidden_tag() }}
+        {{ form.username.label() }}
+        {{ form.username(required=True) }}
+        {{ form.password.label() }}
+        {{ form.password(type="password", required=True) }}
+        {{ form.submit() }}
     </form>
 {% endblock %}

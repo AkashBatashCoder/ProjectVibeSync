@@ -5,14 +5,17 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 from VibeSync.db import get_db
 
+# importing the forms
+from VibeSync.forms import RegistrationForm, LoginForm
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @bp.route('/register', methods=('GET','POST'))
 def register():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
         db = get_db()
         error = None
 
@@ -35,15 +38,16 @@ def register():
 
         flash(error)
 
-    return render_template('auth/register.html')
+    return render_template('auth/register.html',form=form)
 
 
 
 @bp.route('/login', methods=('GET','POST'))
 def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+    form = LoginForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
         db = get_db()
         error = None
         user = db.execute(
@@ -63,7 +67,7 @@ def login():
 
         flash(error)
 
-    return render_template('auth/login.html')
+    return render_template('auth/login.html', form=form)
 
 
 @bp.before_app_request

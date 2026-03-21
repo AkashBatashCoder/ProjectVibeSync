@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Length, EqualTo
 
 class RegistrationForm(FlaskForm):
@@ -15,12 +15,15 @@ class LoginForm(FlaskForm):
 
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(max=100)])
-    body = StringField('Body', validators=[DataRequired()])
+    body = TextAreaField('Body', validators=[DataRequired()])
     submit = SubmitField('Create Post')
 
 class UpdatePostForm(FlaskForm):
     # Will update later / need to load the existing post data first
     title = StringField('Title', validators=[DataRequired(), Length(max=100)])
-    body = StringField('Body', validators=[DataRequired()])
+    body = TextAreaField('Body', validators=[DataRequired()])
     submit = SubmitField('Update Post')
+
+class DeletePostForm(FlaskForm):
+    submit = SubmitField('Delete Post')
 

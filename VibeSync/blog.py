@@ -1,9 +1,12 @@
+from types import SimpleNamespace
+
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for, session       
 )
 from werkzeug.exceptions import abort
 from VibeSync.auth import login_required
 from VibeSync.db import get_db
+from VibeSync.forms import PostForm, UpdatePostForm, DeletePostForm
 
 bp = Blueprint('blog', __name__)
 
@@ -22,9 +25,10 @@ def index():
 @bp.route('/create', methods=('GET','POST'))
 @login_required
 def create():
-    if request.method == 'POST':
-        title = request.form['title']
-        body = request.form['body']
+    form = PostForm()
+    if form.validate_on_submit():
+        title = form.title.data
+        body = form.body.data
         error = None
 
         if not title:
@@ -66,34 +70,31 @@ def get_post(id, check_author=True):
 @login_required
 def update(id):
     post = get_post(id)
+    post_obj = SimpleNamespace(**post)
+    form = UpdatePostForm(obj=post_obj)
+    if form.validate_on_submit():
+        title = form.title.data
+        body = form.body.data
 
-    if request.method == 'POST':
-        title = request.form['title']
-        body = request.form['body']
-        error = None
+        db = get_db()
+        db.execute(
+            'UPDATE post SET title = ?, body = ? WHERE id = ?',
+            (title, body, id)
+        )
+        db.commit()
+        return redirect(url_for('blog.index'))
 
-        if not title:
-            error = 'Title is required.'
 
-        if error is None:
-            db = get_db()
-            db.execute(
-                'UPDATE post SET title = ?, body = ? WHERE id = ?',
-                (title, body, id)
-            )
-            db.commit()
-            return redirect(url_for('blog.index'))
-
-        flash(error)
-
-    return render_template('blog/update.html', post=post)
+    return render_template('blog/update.html', post=post, form=form)
 
 
 @bp.route('/<int:id>/delete', methods=('POST',))
 @login_required
 def delete(id):
-    get_post(id)
-    db = get_db()
-    db.execute('DELETE FROM post WHERE id = ?', (id,))
-    db.commit()
+    form = DeletePostForm()
+    if form.validate_on_submit():
+        get_post(id)
+        db = get_db()
+        db.execute('DELETE FROM post WHERE id = ?', (id,))
+        db.commit()
     return redirect(url_for('blog.index'))

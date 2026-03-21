@@ -41,7 +41,7 @@ def create():
 
         flash(error)
 
-    return render_template('blog/create.html')
+    return render_template('blog/create.html',form=form)
 
 
 

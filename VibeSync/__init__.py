@@ -1,8 +1,8 @@
 import os 
 
-from flask import Flask, app, render_template
+from flask import Flask, app, flash, render_template, request
 from flask import g, redirect, url_for
-from flask_wtf.csrf import CSRFProtect
+from flask_wtf.csrf import CSRFProtect, CSRFError
 
 
 def create_app(test_config=None):
@@ -57,5 +57,11 @@ def create_app(test_config=None):
     @app.errorhandler(404)
     def not_found(e):
         return render_template("404.html"), 404
+    
+    @app.errorhandler(CSRFError)
+    def handle_csrf_error(e):
+        flash("The form has expired. Please try again.", "danger")
+        return redirect(request.url), 302
+
     return app
     

@@ -23,16 +23,29 @@ Users can:
 ## Project Structure
 
 ```text
-ProjectVibeSync/
+projectvibesync/
+├── instance/
+│   └── VibeSync.sqlite
 ├── VibeSync/
-│   ├── __init__.py
 │   ├── auth.py
 │   ├── blog.py
-│   ├── db.py
-│   ├── schema.sql
-│   ├── static/
-│   └── templates/
-├── instance/
+│   ├── extensions.py
+│   ├── forms.py
+│   ├── __init__.py
+│   ├── models.py
+│   ├── static
+│   │   └── style.css
+│   └── templates
+│       ├── 404.html
+│       ├── auth
+│       │   ├── login.html
+│       │   └── register.html
+│       ├── base.html
+│       ├── blog
+│       │   ├── create.html
+│       │   ├── index.html
+│       │   └── update.html
+│       └── home.html
 ├── requirements.txt
 ├── .gitignore
 └── README.md
@@ -78,7 +91,7 @@ pip install -r requirements.txt
 ### 4. Initialize the database
 
 ```bash
-flask --app VibeSync init-db
+flask --app "VibeSync:create_app()" init-db
 ```
 
 ### 5. Run the application
@@ -106,7 +119,7 @@ This project currently uses SQLite for simplicity and testing.
 The database file is created inside the `instance/` folder when you run:
 
 ```bash
-flask --app VibeSync init-db
+flask --app "VibeSync:create_app()" init-db
 ```
 
 ## Notes

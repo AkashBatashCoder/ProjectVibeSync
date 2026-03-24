@@ -1,15 +1,15 @@
 import os 
-
-from flask import Flask, app, flash, render_template, request
+import click
+from flask import Flask, flash, render_template, request
 from flask import g, redirect, url_for
 from flask_wtf.csrf import CSRFProtect, CSRFError
-
+from flask.cli import with_appcontext
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY="dev",
-        DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
+        SQLALCHEMY_DATABASE_URI='sqlite:///VibeSync.sqlite',
     )
     
     if test_config is None:
@@ -27,17 +27,18 @@ def create_app(test_config=None):
     csrf.init_app(app)
 
 
-    # @app.route('/')
-    # def home():
-    #     return "This is the simple home page."
-
-    # @app.route('/hello')
-    # def hello():
-    #     return "Hello world! This is Hello page"
-
     # Initialize the database
-    from . import db
+    from .extensions import db
     db.init_app(app)
+
+    # Register the database commands
+    @app.cli.command('init-db')
+    @with_appcontext
+    def init_db_command():
+        from .extensions import db
+        db.create_all()
+        click.echo('Initialized the database.')
+
 
     # Register the auth blueprint for auth  
     from . import auth
@@ -46,6 +47,8 @@ def create_app(test_config=None):
     # Register the blog blueprint for blog
     from . import blog
     app.register_blueprint(blog.bp)
+
+
 
     #app.add_url_rule('/', endpoint='index')
     @app.route('/')

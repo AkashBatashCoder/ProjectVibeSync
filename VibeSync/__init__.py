@@ -9,7 +9,7 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY="dev",
-        DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
+        DATABASE=os.path.join(app.instance_path, 'VibeSync.sqlite'),
     )
     
     if test_config is None:
@@ -26,14 +26,6 @@ def create_app(test_config=None):
     csrf = CSRFProtect(app)
     csrf.init_app(app)
 
-
-    # @app.route('/')
-    # def home():
-    #     return "This is the simple home page."
-
-    # @app.route('/hello')
-    # def hello():
-    #     return "Hello world! This is Hello page"
 
     # Initialize the database
     from . import db

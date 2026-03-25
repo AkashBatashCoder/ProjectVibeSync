@@ -1,6 +1,6 @@
 import functools
 from flask import (
-    Blueprint, flash,g, redirect, render_template, session, url_for
+    Blueprint, flash, redirect, render_template, url_for
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -9,11 +9,16 @@ from VibeSync.forms import RegistrationForm, LoginForm
 # importing the database
 from VibeSync.extensions import db
 from VibeSync.models import User
+from flask_login import login_user, logout_user, current_user
+from .extensions import login_manager
+
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @bp.route('/register', methods=('GET','POST'))
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('blog.index'))
     form = RegistrationForm()
     if form.validate_on_submit():
         username = form.username.data
@@ -41,6 +46,9 @@ def register():
 
 @bp.route('/login', methods=('GET','POST'))
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('blog.index'))
+
     form = LoginForm()
     if form.validate_on_submit():
         username = form.username.data
@@ -54,8 +62,7 @@ def login():
             error = 'Incorrect password.'
 
         if error is None:
-            session.clear()
-            session['user_id'] = user.id
+            login_user(user,remember=True) # form.remember.data is used for chackbox
             return redirect(url_for('blog.index')) 
 
         flash(error)
@@ -63,27 +70,19 @@ def login():
     return render_template('auth/login.html', form=form)
 
 
-@bp.before_app_request
-def load_logged_in_user():
-    user_id = session.get('user_id')
+@login_manager.user_loader
+def load_user(user_id):
+    '''Flask-Login user loader callback. This function is used to reload the user object from the user ID stored in the session.
+    This function is used by Flask-Login to load the user from the database when the user is logged in. It takes the user_id as an argument and returns the corresponding User
+    '''
+    return User.query.get(int(user_id))
 
-    if user_id is None: 
-        g.user = None
-    else:
-        g.user = User.query.get(user_id)
+
 
 @bp.route('/logout')
 def logout():
-    session.clear()
+    logout_user()
+    flash('You have been logged out.')
     return redirect(url_for('blog.index'))
 
 
-def login_required(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if g.user is None:
-            return redirect(url_for('auth.login'))
-
-        return view(**kwargs)
-
-    return wrapped_view

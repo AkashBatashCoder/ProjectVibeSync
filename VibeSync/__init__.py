@@ -4,6 +4,8 @@ from flask import Flask, flash, render_template, request
 from flask import g, redirect, url_for
 from flask_wtf.csrf import CSRFProtect, CSRFError
 from flask.cli import with_appcontext
+from .extensions import login_manager
+from flask_login import current_user
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -31,6 +33,10 @@ def create_app(test_config=None):
     from .extensions import db
     db.init_app(app)
 
+    # Initialize the login manager
+    login_manager.init_app(app)
+    login_manager.login_view = 'auth.login' # Set the login view for @login_required
+
     # Register the database commands
     @app.cli.command('init-db')
     @with_appcontext
@@ -53,7 +59,7 @@ def create_app(test_config=None):
     #app.add_url_rule('/', endpoint='index')
     @app.route('/')
     def home():
-        if g.get('user'):
+        if current_user.is_authenticated:
             return redirect(url_for('blog.index'))
         return render_template('home.html')
 

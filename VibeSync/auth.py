@@ -9,7 +9,7 @@ from VibeSync.forms import RegistrationForm, LoginForm
 # importing the database
 from VibeSync.extensions import db
 from VibeSync.models import User
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, current_user
 from .extensions import login_manager
 
 
@@ -17,6 +17,8 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @bp.route('/register', methods=('GET','POST'))
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('blog.index'))
     form = RegistrationForm()
     if form.validate_on_submit():
         username = form.username.data
@@ -44,6 +46,9 @@ def register():
 
 @bp.route('/login', methods=('GET','POST'))
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('blog.index'))
+
     form = LoginForm()
     if form.validate_on_submit():
         username = form.username.data
